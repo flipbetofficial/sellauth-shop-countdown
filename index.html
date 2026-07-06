@@ -1,478 +1,430 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>ShopSellAuth | Coming Soon</title>
-
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800;900&display=swap');
-
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
-
-body{
-    min-height:100vh;
-    font-family:Inter,Arial,sans-serif;
-    background:
-    radial-gradient(circle at 20% 20%, rgba(88,101,242,.35), transparent 30%),
-    radial-gradient(circle at 80% 80%, rgba(0,200,255,.15), transparent 25%),
-    #05070f;
-    color:white;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    overflow:hidden;
-}
-
-
-/* Background particles */
-
-body:before{
-    content:"";
-    position:absolute;
-    width:700px;
-    height:700px;
-    background:#5865F2;
-    filter:blur(180px);
-    opacity:.15;
-}
-
-
-/* Main card */
-
-.container{
-
-    position:relative;
-    width:90%;
-    max-width:900px;
-
-    padding:60px 40px;
-
-    background:
-    rgba(255,255,255,.06);
-
-    backdrop-filter:blur(20px);
-
-    border:1px solid rgba(255,255,255,.12);
-
-    border-radius:30px;
-
-    text-align:center;
-
-    box-shadow:
-    0 0 80px rgba(88,101,242,.25);
-
-    animation:show 1s ease;
-}
-
-
-@keyframes show{
-
-from{
-    opacity:0;
-    transform:translateY(30px);
-}
-
-to{
-    opacity:1;
-    transform:translateY(0);
-}
-
-}
-
-
-/* Logo */
-
-.logo{
-
-font-size:50px;
-font-weight:900;
-
-background:
-linear-gradient(
-90deg,
-#5865F2,
-#00d4ff
-);
-
--webkit-background-clip:text;
-color:transparent;
-
-margin-bottom:15px;
-
-}
-
-
-.badge{
-
-display:inline-block;
-
-padding:8px 18px;
-
-border-radius:50px;
-
-background:rgba(88,101,242,.15);
-
-border:1px solid rgba(88,101,242,.4);
-
-color:#b8c1ff;
-
-font-size:14px;
-
-margin-bottom:25px;
-
-}
-
-
-/* Text */
-
-h1{
-
-font-size:42px;
-
-margin-bottom:15px;
-
-}
-
-
-.description{
-
-color:#aeb7c9;
-
-font-size:18px;
-
-max-width:600px;
-
-margin:auto;
-
-line-height:1.6;
-
-}
-
-
-/* Countdown */
-
-.countdown{
-
-display:flex;
-
-justify-content:center;
-
-gap:18px;
-
-margin:45px 0;
-
-flex-wrap:wrap;
-
-}
-
-
-.box{
-
-width:130px;
-
-padding:25px 15px;
-
-background:
-rgba(255,255,255,.05);
-
-border-radius:20px;
-
-border:1px solid rgba(255,255,255,.1);
-
-transition:.3s;
-
-}
-
-
-.box:hover{
-
-transform:translateY(-8px);
-
-border-color:#5865F2;
-
-}
-
-
-.number{
-
-font-size:40px;
-
-font-weight:800;
-
-color:white;
-
-}
-
-
-.label{
-
-margin-top:8px;
-
-font-size:13px;
-
-color:#8993aa;
-
-text-transform:uppercase;
-
-}
-
-
-/* Button */
-
-
-.button{
-
-display:inline-flex;
-
-gap:10px;
-
-align-items:center;
-
-padding:16px 35px;
-
-border-radius:50px;
-
-background:#5865F2;
-
-color:white;
-
-text-decoration:none;
-
-font-weight:700;
-
-transition:.3s;
-
-}
-
-
-.button:hover{
-
-background:#4752c4;
-
-transform:scale(1.05);
-
-}
-
-
-/* Footer */
-
-.footer{
-
-margin-top:35px;
-
-color:#6f7890;
-
-font-size:14px;
-
-}
-
-
-/* Mobile */
-
-@media(max-width:600px){
-
-.container{
-
-padding:40px 20px;
-
-}
-
-
-h1{
-
-font-size:30px;
-
-}
-
-
-.logo{
-
-font-size:38px;
-
-}
-
-
-.box{
-
-width:100px;
-
-}
-
-.number{
-
-font-size:30px;
-
-}
-
-}
-
-</style>
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ShopSellAuth — Premium Discord Products</title>
+  <style>
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg:        #05070f;
+      --surface:   rgba(255, 255, 255, 0.04);
+      --border:    rgba(88, 101, 242, 0.25);
+      --border-h:  rgba(88, 101, 242, 0.55);
+      --purple:    #5865F2;
+      --purple-d:  #4752c4;
+      --cyan:      #00c8ff;
+      --text:      #e8eaf0;
+      --muted:     #6c7086;
+      --radius:    18px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* ── Background radial glows ── */
+    body::before,
+    body::after {
+      content: '';
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(120px);
+      pointer-events: none;
+      z-index: 0;
+    }
+    body::before {
+      width: 600px;
+      height: 600px;
+      top: -150px;
+      left: -150px;
+      background: radial-gradient(circle, rgba(88,101,242,0.14) 0%, transparent 70%);
+    }
+    body::after {
+      width: 500px;
+      height: 500px;
+      bottom: -100px;
+      right: -100px;
+      background: radial-gradient(circle, rgba(0,200,255,0.08) 0%, transparent 70%);
+    }
+
+    /* ── Animated star particles ── */
+    .particles {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      background: var(--purple);
+      opacity: 0;
+      animation: float-up linear infinite;
+    }
+
+    @keyframes float-up {
+      0%   { opacity: 0; transform: translateY(0) scale(0.8); }
+      10%  { opacity: 0.4; }
+      90%  { opacity: 0.15; }
+      100% { opacity: 0; transform: translateY(-100vh) scale(1.2); }
+    }
+
+    /* ── Main card ── */
+    .card {
+      position: relative;
+      z-index: 1;
+      background: var(--surface);
+      backdrop-filter: blur(32px) saturate(160%);
+      -webkit-backdrop-filter: blur(32px) saturate(160%);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: clamp(40px, 6vw, 72px) clamp(28px, 5vw, 64px);
+      max-width: 640px;
+      width: calc(100% - 40px);
+      text-align: center;
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.03) inset,
+        0 32px 64px rgba(0,0,0,0.55),
+        0 0 60px rgba(88,101,242,0.07);
+      animation: card-in 0.9s cubic-bezier(0.22,1,0.36,1) both;
+    }
+
+    @keyframes card-in {
+      from { opacity: 0; transform: translateY(28px) scale(0.97); }
+      to   { opacity: 1; transform: translateY(0)   scale(1);    }
+    }
+
+    /* ── Badge ── */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: rgba(88,101,242,0.15);
+      border: 1px solid rgba(88,101,242,0.35);
+      color: #a5aef8;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 5px 14px;
+      border-radius: 100px;
+      margin-bottom: 28px;
+      animation: badge-in 0.9s 0.2s cubic-bezier(0.22,1,0.36,1) both;
+    }
+    .badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--cyan);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes badge-in {
+      from { opacity: 0; transform: translateY(-10px); }
+      to   { opacity: 1; transform: translateY(0);     }
+    }
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(0,200,255,0.6); }
+      50%       { box-shadow: 0 0 0 5px rgba(0,200,255,0);  }
+    }
+
+    /* ── Brand ── */
+    .brand {
+      font-size: clamp(32px, 6vw, 52px);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      margin-bottom: 10px;
+      animation: fade-up 0.9s 0.3s cubic-bezier(0.22,1,0.36,1) both;
+    }
+    .brand-accent {
+      color: var(--purple);
+    }
+
+    .subtitle {
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 28px;
+      animation: fade-up 0.9s 0.4s cubic-bezier(0.22,1,0.36,1) both;
+    }
+
+    /* ── Divider ── */
+    .divider {
+      width: 48px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--purple), transparent);
+      margin: 0 auto 28px;
+      border-radius: 2px;
+      animation: fade-up 0.9s 0.45s cubic-bezier(0.22,1,0.36,1) both;
+    }
+
+    /* ── Description ── */
+    .description {
+      font-size: 15px;
+      line-height: 1.75;
+      color: #8b90a8;
+      max-width: 480px;
+      margin: 0 auto 44px;
+      animation: fade-up 0.9s 0.5s cubic-bezier(0.22,1,0.36,1) both;
+    }
+
+    /* ── Countdown ── */
+    .countdown-wrap {
+      animation: fade-up 0.9s 0.6s cubic-bezier(0.22,1,0.36,1) both;
+    }
+
+    .countdown-label {
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .countdown {
+      display: flex;
+      justify-content: center;
+      gap: clamp(10px, 2.5vw, 20px);
+    }
+
+    .unit {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      min-width: clamp(62px, 12vw, 88px);
+    }
+
+    .unit-value {
+      background: rgba(88,101,242,0.10);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      width: 100%;
+      padding: 14px 8px;
+      font-size: clamp(26px, 5vw, 38px);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    .unit-value::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .unit:hover .unit-value {
+      border-color: var(--border-h);
+      box-shadow: 0 0 20px rgba(88,101,242,0.15);
+    }
+
+    .unit-name {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* separator colon */
+    .colon {
+      font-size: clamp(24px, 4vw, 34px);
+      font-weight: 700;
+      color: var(--border-h);
+      align-self: flex-start;
+      padding-top: 14px;
+      animation: blink 1.2s step-end infinite;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.2; }
+    }
+
+    /* ── Launched state ── */
+    .launched {
+      font-size: clamp(22px, 4vw, 30px);
+      font-weight: 700;
+      color: var(--cyan);
+      letter-spacing: 0.03em;
+      padding: 20px 0;
+      text-shadow: 0 0 24px rgba(0,200,255,0.4);
+      animation: glow-pulse 2s ease-in-out infinite;
+    }
+    @keyframes glow-pulse {
+      0%, 100% { text-shadow: 0 0 24px rgba(0,200,255,0.4); }
+      50%       { text-shadow: 0 0 48px rgba(0,200,255,0.75); }
+    }
+
+    /* ── Footer ── */
+    footer {
+      position: relative;
+      z-index: 1;
+      margin-top: 32px;
+      color: #3a3d52;
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      animation: fade-up 0.9s 0.75s cubic-bezier(0.22,1,0.36,1) both;
+    }
+    footer span {
+      color: #4a4e6a;
+    }
+
+    /* ── Utilities ── */
+    @keyframes fade-up {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0);    }
+    }
+
+    @media (max-width: 400px) {
+      .colon { display: none; }
+    }
+  </style>
 </head>
-
-
 <body>
 
-
-<div class="container">
-
-
-<div class="badge">
-🚀 Launching Soon
-</div>
-
-
-<div class="logo">
-ShopSellAuth
-</div>
-
-
-<h1>
-Premium Discord Products
-</h1>
-
-
-<p class="description">
-A new generation of Discord tools, designs and services.
-Our store is almost ready.
-</p>
-
-
-
-<div class="countdown">
-
-
-<div class="box">
-<div class="number" id="days">00</div>
-<div class="label">Days</div>
-</div>
-
-
-<div class="box">
-<div class="number" id="hours">00</div>
-<div class="label">Hours</div>
-</div>
-
-
-<div class="box">
-<div class="number" id="minutes">00</div>
-<div class="label">Minutes</div>
-</div>
-
-
-<div class="box">
-<div class="number" id="seconds">00</div>
-<div class="label">Seconds</div>
-</div>
-
-
-</div>
-
-
-
-<a class="button" href="#">
-💬 Join Discord
-</a>
-
-
-
-<div class="footer">
-© 2026 ShopSellAuth • All rights reserved
-</div>
-
-
-</div>
-
-
-
-<script>
-
-
-// Fixed launch date
-// Change this date when needed
-
-const launchDate = new Date();
-
-launchDate.setDate(
-launchDate.getDate()+15
-);
-
-
-function updateCountdown(){
-
-
-const now = new Date();
-
-const distance = launchDate - now;
-
-
-if(distance <= 0){
-
-document.querySelector(".countdown").innerHTML =
-"🚀 WE ARE LIVE";
-
-return;
-
-}
-
-
-const days =
-Math.floor(
-distance/(1000*60*60*24)
-);
-
-
-const hours =
-Math.floor(
-(distance/(1000*60*60))%24
-);
-
-
-const minutes =
-Math.floor(
-(distance/(1000*60))%60
-);
-
-
-const seconds =
-Math.floor(
-(distance/1000)%60
-);
-
-
-
-document.getElementById("days").textContent =
-days.toString().padStart(2,"0");
-
-
-document.getElementById("hours").textContent =
-hours.toString().padStart(2,"0");
-
-
-document.getElementById("minutes").textContent =
-minutes.toString().padStart(2,"0");
-
-
-document.getElementById("seconds").textContent =
-seconds.toString().padStart(2,"0");
-
-
-}
-
-
-setInterval(updateCountdown,1000);
-
-updateCountdown();
-
-
-</script>
-
-
+  <!-- Particles -->
+  <div class="particles" id="particles"></div>
+
+  <!-- Card -->
+  <main class="card">
+    <div class="badge">
+      <span class="badge-dot"></span>
+      Launching Soon
+    </div>
+
+    <h1 class="brand">Shop<span class="brand-accent">Sell</span>Auth</h1>
+    <p class="subtitle">Premium Discord Products</p>
+
+    <div class="divider"></div>
+
+    <p class="description">
+      We're putting the finishing touches on something built for the Discord community.
+      Our store opens soon — get ready for premium digital products, tools, and authentication solutions crafted for your server.
+    </p>
+
+    <div class="countdown-wrap">
+      <p class="countdown-label">Store opens in</p>
+      <div class="countdown" id="countdown">
+        <div class="unit">
+          <div class="unit-value" id="cd-days">00</div>
+          <div class="unit-name">Days</div>
+        </div>
+        <div class="colon">:</div>
+        <div class="unit">
+          <div class="unit-value" id="cd-hours">00</div>
+          <div class="unit-name">Hours</div>
+        </div>
+        <div class="colon">:</div>
+        <div class="unit">
+          <div class="unit-value" id="cd-minutes">00</div>
+          <div class="unit-name">Minutes</div>
+        </div>
+        <div class="colon">:</div>
+        <div class="unit">
+          <div class="unit-value" id="cd-seconds">00</div>
+          <div class="unit-name">Seconds</div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    &copy; <span id="year"></span> ShopSellAuth &mdash; <span>All rights reserved</span>
+  </footer>
+
+  <script>
+    /* ─── Year ─── */
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    /* ─── Particles ─── */
+    (function spawnParticles() {
+      const container = document.getElementById('particles');
+      const count = 28;
+      for (let i = 0; i < count; i++) {
+        const p = document.createElement('div');
+        p.className = 'particle';
+        const size = Math.random() * 3 + 1;
+        p.style.cssText = [
+          `width:${size}px`,
+          `height:${size}px`,
+          `left:${Math.random() * 100}%`,
+          `bottom:${-size}px`,
+          `opacity:0`,
+          `animation-duration:${Math.random() * 18 + 12}s`,
+          `animation-delay:${Math.random() * 14}s`,
+          i % 5 === 0 ? `background:#00c8ff;` : `background:#5865F2;`
+        ].join(';');
+        container.appendChild(p);
+      }
+    })();
+
+    /* ─── Persistent countdown (15 days from first visit) ─── */
+    (function initCountdown() {
+      const STORAGE_KEY = 'shopSellAuth_launchAt';
+      const DURATION_MS = 15 * 24 * 60 * 60 * 1000; // 15 days
+
+      let launchAt = parseInt(localStorage.getItem(STORAGE_KEY), 10);
+      if (!launchAt || isNaN(launchAt)) {
+        launchAt = Date.now() + DURATION_MS;
+        localStorage.setItem(STORAGE_KEY, launchAt);
+      }
+
+      const dDays    = document.getElementById('cd-days');
+      const dHours   = document.getElementById('cd-hours');
+      const dMinutes = document.getElementById('cd-minutes');
+      const dSeconds = document.getElementById('cd-seconds');
+      const wrap     = document.getElementById('countdown');
+
+      function pad(n) { return String(n).padStart(2, '0'); }
+
+      function tick() {
+        const diff = launchAt - Date.now();
+
+        if (diff <= 0) {
+          wrap.innerHTML = '<div class="launched">✦ Launching Now</div>';
+          return;
+        }
+
+        const totalSec = Math.floor(diff / 1000);
+        const days    = Math.floor(totalSec / 86400);
+        const hours   = Math.floor((totalSec % 86400) / 3600);
+        const minutes = Math.floor((totalSec % 3600) / 60);
+        const seconds = totalSec % 60;
+
+        dDays.textContent    = pad(days);
+        dHours.textContent   = pad(hours);
+        dMinutes.textContent = pad(minutes);
+        dSeconds.textContent = pad(seconds);
+
+        setTimeout(tick, 1000);
+      }
+
+      tick();
+    })();
+  </script>
 </body>
 </html>
