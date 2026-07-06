@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop Sell Auth • Premium Digital Products</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Space+Grotesk:wght@500;600&amp;display=swap');
+        
+        :root {
+            --primary: 234 179 8;
+        }
+        
+        .tail-container {
+            font-family: 'Inter', system_ui, sans-serif;
+        }
+        
+        .logo-font {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .hero-bg {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+        }
+
+        .product-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.4);
+        }
+
+        .nav-link {
+            position: relative;
+        }
+        
+        .nav-link:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -2px;
+            left: 0;
+            background-color: rgb(234 179 8);
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover:after {
+            width: 100%;
+        }
+
+        .toast {
+            animation: toastIn 0.3s ease forwards;
+        }
+
+        @keyframes toastIn {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .cart-drawer {
+            transform: translateX(100%);
+            transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+        }
+        
+        .cart-drawer.open {
+            transform: translateX(0);
+        }
+
+        .section-header {
+            position: relative;
+        }
+        
+        .section-header:after {
+            content: '';
+            position: absolute;
+            width: 60px;
+            height: 3px;
+            background: rgb(234 179 8);
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .loading-bar {
+            animation: loading 2s infinite linear;
+        }
+    </style>
+</head>
+<body class="tail-container bg-zinc-950 text-zinc-100">
+    <!-- LOADING SCREEN -->
+    <div id="loading-screen" class="fixed inset-0 bg-zinc-950 flex items-center justify-center z-[9999]">
+        <div class="text-center">
+            <div class="w-16 h-16 mx-auto mb-6 border-4 border-yellow-500 border-t-transparent rounded-full animate-spin"></div>
+            <div class="logo-font text-3xl font-semibold tracking-tighter">SHOP SELL AUTH</div>
+            <div class="text-zinc-400 text-sm mt-2">Loading premium marketplace...</div>
+        </div>
+    </div>
+
+    <!-- NAVBAR -->
+    <nav class="bg-zinc-900 border-b border-zinc-800 sticky top-0 z-50">
+        <div class="max-w-screen-2xl mx-auto">
+            <div class="px-8 py-5 flex items-center justify-between">
+                <!-- Logo -->
+                <div onclick="navigateTo('home')" class="flex items-center gap-x-3 cursor-pointer">
+                    <div class="w-9 h-9 bg-yellow-500 rounded-2xl flex items-center justify-center text-zinc-950 font-bold text-2xl">S</div>
+                    <div>
+                        <span class="logo-font text-3xl font-semibold tracking-tighter">SHOP</span>
+                        <span class="logo-font text-3xl font-semibold tracking-tighter text-yellow-500">SELL</span>
+                        <span class="logo-font text-3xl font-semibold tracking-tighter">AUTH</span>
+                    </div>
+                </div>
+
+                <!-- Menu -->
+                <div class="hidden md:flex items-center gap-x-8 text-sm font-medium">
+                    <a onclick="navigateTo('home')" class="nav-link cursor-pointer hover:text-yellow-400 transition-colors">Shop</a>
+                    <a onclick="navigateTo('orders')" class="nav-link cursor-pointer hover:text-yellow-400 transition-colors">Orders</a>
+                    <a onclick="navigateTo('faq')" class="nav-link cursor-pointer hover:text-yellow-400 transition-colors">FAQ</a>
+                </div>
+
+                <div class="flex items-center gap-x-6">
+                    <!-- Search -->
+                    <div class="relative hidden md:block w-72">
+                        <input id="nav-search" 
+                               onkeyup="if(event.key === 'Enter') performSearch(this.value)"
+                               type="text" 
+                               placeholder="Search products..." 
+                               class="w-full bg-zinc-800 border border-zinc-700 focus:border-yellow-500 rounded-3xl py-3 px-5 text-sm outline-none transition-all">
+                        <i onclick="performSearch(document.getElementById('nav-search').value)" class="fa-solid fa-magnifying-glass absolute right-5 top-3.5 text-zinc-400 cursor-pointer"></i>
+                    </div>
+
+                    <!-- Cart -->
+                    <div onclick="toggleCart()" class="relative cursor-pointer group">
+                        <i class="fa-solid fa-shopping-cart text-2xl group-hover:text-yellow-400 transition-colors"></i>
+                        <span id="cart-count" 
+                              class="absolute -top-1 -right-1 bg-yellow-500 text-zinc-950 text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full">
+                            0
+                        </span>
+                    </div>
+
+                    <div onclick="toggleMobileMenu()" class="md:hidden text-2xl cursor-pointer">
+                        <i class="fa-solid fa-bars"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- MOBILE MENU -->
+    <div id="mobile-menu" class="hidden md:hidden fixed inset-0 bg-zinc-900 z-50 pt-20 px-6">
+        <div class="flex flex-col gap-y-6 text-lg">
+            <a onclick="navigateTo('home');toggleMobileMenu()" class="py-3 border-b border-zinc-800">Shop</a>
+            <a onclick="navigateTo('orders');toggleMobileMenu()" class="py-3 border-b border-zinc-800">My Orders</a>
+            <a onclick="navigateTo('faq');toggleMobileMenu()" class="py-3 border-b border-zinc-800">FAQ</a>
+            <div class="pt-6">
+                <button onclick="toggleMobileMenu()" 
+                        class="w-full py-4 bg-yellow-500 hover:bg-yellow-400 transition-colors text-zinc-950 font-semibold rounded-3xl">
+                    CLOSE MENU
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- HERO -->
+    <section id="home-section" class="hero-bg pt-20 pb-16">
+        <div class="max-w-screen-2xl mx-auto px-8">
+            <div class="grid md:grid-cols-2 gap-16 items-center">
+                <div class="space-y-8">
+                    <div class="inline-flex items-center gap-x-2 bg-zinc-800 rounded-3xl px-5 py-2 text-sm">
+                        <div class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
+                        <span class="text-emerald-400 font-medium">Trusted by 12,459 customers</span>
+                    </div>
+                    
+                    <h1 class="text-6xl md:text-7xl font-semibold leading-none tracking-tighter logo-font">
+                        PREMIUM DIGITAL<br>PRODUCTS AT<br><span class="text-yellow-400">AFFORDABLE</span> PRICES
+                    </h1>
+                    
+                    <p class="text-xl text-zinc-400 max-w-md">
+                        Instant delivery of Discord boosts, Nitro, Robux, and more. 
+                        Secure payments via Litecoin.
+                    </p>
+                    
+                    <div class="flex items-center gap-x-4">
+                        <button onclick="document.getElementById('catalog-section').scrollIntoView({ behavior: 'smooth' })" 
+                                class="px-8 py-4 bg-yellow-400 hover:bg-yellow-300 transition-all text-zinc-950 font-semibold rounded-3xl flex items-center gap-x-3 text-lg">
+                            <span>BROWSE PRODUCTS</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                        
+                        <button onclick="toggleCart()" 
+                                class="px-8 py-4 border border-zinc-300 hover:border-white transition-all font-medium rounded-3xl">
+                            VIEW CART
+                        </button>
+                    </div>
+                    
+                    <div class="flex items-center gap-x-8 text-sm pt-4">
+                        <div class="flex items-center gap-x-2">
+                            <i class="fa-solid fa-shield-halved text-emerald-400"></i>
+                            <span>Secure</span>
+                        </div>
+                        <div class="flex items-center gap-x-2">
+                            <i class="fa-solid fa-bolt text-yellow-400"></i>
+                            <span>Instant</span>
+                        </div>
+                        <div class="flex items-center gap-x-2">
+                            <i class="fa-solid fa-star text-amber-400"></i>
+                            <span>Premium</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Hero visual -->
+                <div class="relative hidden md:block">
+                    <div class="absolute -inset-10 bg-gradient-to-br from-yellow-400/10 to-transparent rounded-[4rem] -rotate-6"></div>
+                    <div class="bg-zinc-900 border border-yellow-400/30 rounded-3xl p-8 relative">
+                        <img src="https://picsum.photos/id/1015/600/420" 
+                             alt="Premium marketplace" 
+                             class="rounded-2xl shadow-2xl w-full">
+                        <div class="absolute -bottom-6 -right-6 bg-zinc-800 border border-yellow-400 rounded-2xl p-6 max-w-[220px]">
+                            <div class="flex justify-between items-center mb-4">
+                                <div class="text-sm">Today's deal</div>
+                                <div class="text-xs bg-emerald-400 text-zinc-950 px-3 py-1 rounded-3xl">−40%</div>
+                            </div>
+                            <div class="text-3xl font-semibold">Discord Nitro</div>
+                            <div class="text-yellow-400 text-4xl font-bold">$2.99</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- STATS -->
+    <section class="py-12 border-b border-zinc-800 bg-zinc-900">
+        <div class="max-w-screen-2xl mx-auto px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+                <div class="text-center">
+                    <div id="stat-orders" class="text-5xl font-bold text-yellow-400">12459</div>
+                    <div class="text-zinc-400 text-sm tracking-widest mt-2">ORDERS COMPLETED</div>
+                </div>
+                <div class="text-center">
+                    <div id="stat-customers" class="text-5xl font-bold text-yellow-400">8732</div>
+                    <div class="text-zinc-400 text-sm tracking-widest mt-2">HAPPY CUSTOMERS</div>
+                </div>
+                <div class="text-center">
+                    <div id="stat-products" class="text-5xl font-bold text-yellow-400">45210</div>
+                    <div class="text-zinc-400 text-sm tracking-widest mt-2">PRODUCTS SOLD</div>
+                </div>
+                <div class="text-center">
+                    <div id="stat-years" class="text-5xl font-bold text-yellow-400">3</div>
+                    <div class="text-zinc-400 text-sm tracking-widest mt-2">YEARS IN SERVICE</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FEATURED PRODUCTS -->
+    <section class="py-20 bg-zinc-950">
+        <div class="max-w-screen-2xl mx-auto px-8">
+            <div class="flex items-end justify-between mb-12">
+                <div>
+                    <span class="px-4 py-2 bg-yellow-500 text-zinc-950 text-xs font-bold rounded-3xl">FEATURED</span>
+                    <h2 class="text-4xl font-semibold mt-3">Best Sellers</h2>
+                </div>
+                <button onclick="document.getElementById('catalog-section').scrollIntoView({ behavior: 'smooth' })" 
+                        class="flex items-center gap-x-2 text-yellow-400 hover:text-yellow-300 transition-colors text-sm font-medium">
+                    SEE ALL 
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+            
+            <div id="featured-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- CATALOG / FILTERS -->
+    <section id="catalog-section" class="py-20 bg-zinc-900">
+        <div class="max-w-screen-2xl mx-auto px-8">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
+                <h2 class="text-4xl font-semibold">All Products</h2>
+                
+                <div class="flex flex-wrap gap-4">
+                    <div class="relative">
+                        <input id="search-input" 
+                               onkeyup="filterProducts()"
+                               type="text" 
+                               placeholder="Search..." 
+                               class="bg-zinc-800 border border-zinc-700 focus:border-yellow-500 w-64 rounded-3xl px-5 py-3 outline-none">
+                    </div>
+                    
+                    <select id="sort-select" onchange="filterProducts()" 
+                            class="bg-zinc-800 border border-zinc-700 rounded-3xl px-5 py-3 outline-none text-sm">
+                        <option value="default">Sort by relevance</option>
+                        <option value="price-low">Price: Low to High</option>
+                        <option value="price-high">Price: High to Low</option>
+                        <option value="name">Name A-Z</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div id="product-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq-section" class="py-20 bg-zinc-950">
+        <div class="max-w-screen-2xl mx-auto px-8">
+            <div class="max-w-3xl mx-auto">
+                <div class="text-center mb-16">
+                    <span class="text-yellow-400 text-sm font-medium">SUPPORT</span>
+                    <h2 class="text-4xl font-semibold mt-3">Frequently Asked Questions</h2>
+                </div>
+                
+                <div class="space-y-4" id="faq-container">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section class="py-20 bg-zinc-900">
+        <div class="max-w-screen-2xl mx-auto px-8">
+            <div class="bg-zinc-800 rounded-3xl p-16 text-center">
+                <i class="fa-solid fa-headset text-6xl text-yellow-400 mb-6"></i>
+                <h2 class="text-4xl font-semibold mb-3">Need help?</h2>
+                <p class="text-zinc-400 max-w-md mx-auto mb-10">
+                    Our support team is available 24/7 on Discord
+                </p>
+                <button onclick="window.open('https://discord.gg/VC77BhU8rC', '_blank')" 
+                        class="px-10 py-5 bg-white text-zinc-950 font-semibold rounded-3xl hover:scale-105 transition-transform flex items-center gap-x-3 mx-auto">
+                    <i class="fa-brands fa-discord"></i>
+                    <span>JOIN DISCORD SUPPORT</span>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-black py-20">
+        <div class="max-w-screen-2xl mx-auto px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-12">
+                <div>
+                    <div class="flex items-center gap-x-3 mb-6">
+                        <div class="w-8 h-8 bg-yellow-500 rounded-2xl flex items-center justify-center text-zinc-950 font-bold">S</div>
+                        <span class="logo-font text-3xl font-semibold">Shop Sell Auth</span>
+                    </div>
+                    <p class="text-zinc-400 text-sm">Premium digital goods marketplace. Fast, reliable, secure.</p>
+                </div>
+                
+                <div>
+                    <div class="font-semibold mb-6">Products</div>
+                    <div class="space-y-3 text-sm text-zinc-400">
+                        <div>Discord Nitro</div>
+                        <div>Server Boosts</div>
+                        <div>Robux</div>
+                        <div>Real Members</div>
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="font-semibold mb-6">Company</div>
+                    <div class="space-y-3 text-sm text-zinc-400">
+                        <div onclick="navigateTo('orders')" class="cursor-pointer">Orders</div>
+                        <div onclick="navigateTo('faq')" class="cursor-pointer">FAQ</div>
+                        <div class="cursor-pointer">Support</div>
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="font-semibold mb-6">Payment</div>
+                    <div class="flex items-center gap-x-4 text-3xl">
+                        <i class="fa-brands fa-bitcoin text-yellow-400"></i>
+                        <span class="text-sm leading-tight">Litecoin<br><span class="text-xs text-zinc-500">LTC</span></span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-zinc-800 mt-16 pt-8 text-xs text-zinc-500 flex flex-col md:flex-row justify-between items-center gap-4">
+                <div>© 2026 Shop Sell Auth. All rights reserved.</div>
+                <div class="flex gap-x-6">
+                    <div>Privacy</div>
+                    <div>Terms</div>
+                    <div class="text-yellow-400">Made for demonstration</div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- CART DRAWER -->
+    <div id="cart-drawer" class="cart-drawer fixed top-0 right-0 h-full w-full md:w-96 bg-zinc-900 shadow-2xl z-[100] overflow-auto">
+        <div class="p-6 border-b border-zinc-700 flex items-center justify-between sticky top-0 bg-zinc-900">
+            <div class="font-semibold text-xl">Your Cart</div>
+            <button onclick="toggleCart()" class="text-3xl text-zinc-400 hover:text-white">×</button>
+        </div>
+        
+        <div id="cart-items" class="p-6 space-y-8 min-h-[400px]">
+            <!-- JS populated -->
+        </div>
+        
+        <div class="p-6 border-t border-zinc-700 sticky bottom-0 bg-zinc-900">
+            <div class="flex justify-between text-lg mb-6">
+                <div class="font-medium">Total</div>
+                <div id="cart-total" class="font-bold text-2xl">$0.00</div>
+            </div>
+            
+            <button onclick="proceedToCheckout()" 
+                    class="w-full py-6 bg-yellow-400 hover:bg-amber-300 transition-colors text-zinc-950 font-bold text-lg rounded-3xl">
+                PROCEED TO CHECKOUT
+            </button>
+            
+            <button onclick="toggleCart()" 
+                    class="w-full py-4 mt-3 text-zinc-400 hover:text-white transition-colors">
+                Continue Shopping
+            </button>
+        </div>
+    </div>
+
+    <!-- CHECKOUT MODAL -->
+    <div id="checkout-modal" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center z-[200]">
+        <div class="bg-zinc-900 w-full max-w-lg mx-4 rounded-3xl overflow-hidden">
+            <!-- Header -->
+            <div class="px-8 py-6 border-b border-zinc-700 flex items-center justify-between">
+                <div class="font-semibold text-2xl">Checkout</div>
+                <button onclick="closeCheckout()" class="text-4xl leading-none text-zinc-400">×</button>
+            </div>
+            
+            <div class="p-8" id="checkout-content">
+                <!-- JS populated -->
+            </div>
+            
+            <div class="p-8 border-t border-zinc-700">
+                <button onclick="showPaymentModal()" 
+                        class="w-full py-6 bg-emerald-500 hover:bg-emerald-400 transition-colors text-white font-semibold rounded-3xl">
+                    PAY WITH LITECOIN
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAYMENT MODAL -->
+    <div id="payment-modal" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center z-[300]">
+        <div class="bg-zinc-900 max-w-md w-full mx-4 rounded-3xl">
+            <div class="p-8">
+                <div class="flex justify-between items-center mb-8">
+                    <div>
+                        <div class="uppercase text-xs tracking-widest text-yellow-400">Litecoin</div>
+                        <div class="text-3xl font-bold">Pay Now</div>
+                    </div>
+                    <div onclick="closePaymentModal()" class="cursor-pointer text-3xl">×</div>
+                </div>
+                
+                <div class="bg-zinc-800 rounded-2xl p-6 mb-8">
+                    <div class="text-sm text-zinc-400 mb-1">Total Due</div>
+                    <div id="payment-total" class="text-5xl font-bold">$0.00</div>
+                </div>
+                
+                <div class="mb-6">
+                    <div class="text-sm text-zinc-400 mb-3">Send exactly this amount to:</div>
+                    <div class="flex gap-x-3 items-center bg-black p-4 rounded-2xl font-mono text-sm break-all">
+                        <div id="wallet-address" class="flex-1">LXZaCfP5tt9yyScUB59ckTMrmrUUEg995p</div>
+                        <button onclick="copyWallet()" 
+                                class="bg-zinc-700 hover:bg-zinc-600 transition-colors px-5 py-2 rounded-xl text-xs">
+                            COPY
+                        </button>
+                    </div>
+                </div>
+                
+                <div onclick="showTxidModal()" 
+                     class="cursor-pointer mt-10 py-6 text-center border border-dashed border-yellow-400 rounded-3xl hover:bg-yellow-400/10 transition-colors">
+                    <span class="font-semibold">I HAVE PAID →</span>
+                </div>
+                
+                <div class="text-[10px] text-center text-zinc-500 mt-8">
+                    Orders processed automatically after 1-3 confirmations
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TXID MODAL -->
+    <div id="txid-modal" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center z-[400]">
+        <div class="bg-zinc-900 max-w-md w-full mx-4 rounded-3xl p-8">
+            <h3 class="text-2xl font-semibold mb-6">Confirm Payment</h3>
+            
+            <div class="space-y-6">
+                <div>
+                    <label class="block text-xs uppercase tracking-widest mb-2 text-zinc-400">Transaction ID (TXID)</label>
+                    <input id="txid-input" type="text" 
+                           class="w-full bg-black border border-zinc-700 rounded-2xl px-5 py-6 outline-none font-mono text-sm"
+                           placeholder="Enter your LTC transaction hash">
+                </div>
+                
+                <div>
+                    <label class="block text-xs uppercase tracking-widest mb-2 text-zinc-400">Email (optional)</label>
+                    <input id="email-input" type="email" 
+                           class="w-full bg-black border border-zinc-700 rounded-2xl px-5 py-6 outline-none"
+                           placeholder="you@email.com">
+                </div>
+            </div>
+            
+            <div class="flex gap-x-4 mt-10">
+                <button onclick="closeTxidModal()" 
+                        class="flex-1 py-6 border border-zinc-700 rounded-3xl">CANCEL</button>
+                <button onclick="submitTxid()" 
+                        class="flex-1 py-6 bg-yellow-400 text-zinc-950 font-bold rounded-3xl">SUBMIT TXID</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- VERIFICATION MODAL -->
+    <div id="verification-modal" class="hidden fixed inset-0 bg-black/90 flex items-center justify-center z-[500]">
+        <div class="max-w-md w-full bg-zinc-900 rounded-3xl p-10 text-center">
+            <div id="verification-status" class="text-yellow-400 font-medium mb-8">VERIFYING PAYMENT...</div>
+            
+            <div class="h-2 bg-zinc-800 rounded-3xl overflow-hidden mb-12">
+                <div id="progress-bar" class="h-full w-0 bg-gradient-to-r from-yellow-300 to-amber-400 transition-all duration-300"></div>
+            </div>
+            
+            <div id="verification-steps" class="space-y-6 text-left text-sm">
+                <!-- JS steps -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ORDER SUCCESS / ERROR MODAL -->
+    <div id="order-result-modal" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center z-[600]">
+        <div class="bg-zinc-900 max-w-lg w-full mx-4 rounded-3xl p-10 text-center">
+            <div id="result-icon" class="mx-auto w-24 h-24 rounded-full flex items-center justify-center text-5xl mb-6"></div>
+            <div id="result-title" class="text-3xl font-semibold mb-3"></div>
+            <div id="result-message" class="text-zinc-400"></div>
+            
+            <div class="my-10 border border-dashed border-zinc-700 rounded-2xl p-6 text-left text-sm" id="result-details">
+                <!-- JS -->
+            </div>
+            
+            <button onclick="window.open('https://discord.gg/VC77BhU8rC','_blank')" 
+                    class="w-full py-6 bg-white text-zinc-950 font-bold rounded-3xl flex items-center justify-center gap-x-3">
+                <i class="fa-brands fa-discord"></i>
+                <span>JOIN DISCORD SUPPORT</span>
+            </button>
+            
+            <button onclick="closeResultModal()" class="mt-6 text-zinc-400 text-sm">Close</button>
+        </div>
+    </div>
+
+    <!-- TOAST CONTAINER -->
+    <div id="toast-container" class="fixed bottom-6 right-6 z-[1000] space-y-3"></div>
+
+    <script>
+        // Tailwind script run
+        function initTailwind() {
+            // Already included via CDN
+        }
+        
+        // PRODUCTS DATA
+        let products = [
+            {
+                id: 1,
+                name: "Discord Decoration",
+                price: 1.20,
+                desc: "Premium server decoration pack with custom emojis and banners.",
+                img: "https://picsum.photos/id/201/300/300"
+            },
+            {
+                id: 2,
+                name: "Discord Nitro",
+                price: 2.99,
+                desc: "Full Nitro subscription - custom emojis, bigger uploads, HD streaming.",
+                img: "https://picsum.photos/id/237/300/300"
+            },
+            {
+                id: 3,
+                name: "14x Server Boost (1 Month)",
+                price: 3.00,
+                desc: "Instant 14 server boosts for 30 days.",
+                img: "https://picsum.photos/id/251/300/300"
+            },
+            {
+                id: 4,
+                name: "14x Server Boost (3 Months)",
+                price: 5.99,
+                desc: "Instant 14 server boosts for 90 days.",
+                img: "https://picsum.photos/id/180/300/300"
+            },
+            {
+                id: 5,
+                name: "Robux",
+                price: 3.00,
+                desc: "Buy Robux - enter quantity below. $3 per 1000.",
+                img: "https://picsum.photos/id/201/300/300",
+                isRobux: true
+            },
+            {
+                id: 6,
+                name: "1000 Real Members",
+                price: 2.00,
+                desc: "High quality real Discord members added to your server.",
+                img: "https://picsum.photos/id/64/300/300"
+            },
+            {
+                id: 7,
+                name: "10000 Real Members",
+                price: 15.00,
+                desc: "Massive boost - 10k real engaged members.",
+                img: "https://picsum.photos/id/201/300/300"
+            }
+        ]
+        
+        let cart = []
+        let orders = []
+        
+        // Load from localStorage
+        function loadData() {
+            const savedCart = localStorage.getItem('ssauth_cart')
+            if (savedCart) cart = JSON.parse(savedCart)
+            
+            const savedOrders = localStorage.getItem('ssauth_orders')
+            if (savedOrders) orders = JSON.parse(savedOrders)
+            
+            updateCartCount()
+        }
+        
+        function saveCart() {
+            localStorage.setItem('ssauth_cart', JSON.stringify(cart))
+        }
+        
+        function saveOrders() {
+            localStorage.setItem('ssauth_orders', JSON.stringify(orders))
+        }
+        
+        // Toast
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container')
+            const toast = document.createElement('div')
+            toast.className = `toast flex items-center gap-x-3 bg-zinc-800 border-l-4 ${type === 'success' ? 'border-emerald-400' : 'border-red-400'} text-white px-6 py-4 rounded-2xl shadow-2xl max-w-xs`
+            toast.innerHTML = `
+                <i class="fa-solid ${type === 'success' ? 'fa-check-circle text-emerald-400' : 'fa-circle-exclamation text-red-400'}"></i>
+                <span>${message}</span>
+            `
+            container.appendChild(toast)
+            
+            setTimeout(() => {
+                toast.style.transition = 'all 0.3s ease'
+                toast.style.opacity = '0'
+                toast.style.transform = 'translateY(20px)'
+                setTimeout(() => toast.remove(), 300)
+            }, 3200)
+        }
+        
+        // Cart count
+        function updateCartCount() {
+            let count = 0
+            cart.forEach(item => {
+                count += item.quantity || 1
+            })
+            document.getElementById('cart-count').textContent = count
+        }
+        
+        // Render product cards
+        function renderProducts(filteredProducts) {
+            const container = document.getElementById('product-grid')
+            container.innerHTML = ''
+            
+            filteredProducts.forEach(product => {
+                const cardHTML = `
+                <div class="product-card bg-zinc-900 border border-zinc-800 rounded-3xl overflow-hidden group">
+                    <div class="relative">
+                        <img src="${product.img}" class="w-full h-60 object-cover" alt="${product.name}">
+                        <div class="absolute top-4 right-4 bg-black/70 text-xs font-mono px-3 py-1 rounded-3xl">${product.isRobux ? 'Variable' : '$' + product.price}</div>
+                    </div>
+                    <div class="p-6">
+                        <div class="font-semibold text-xl mb-2">${product.name}</div>
+                        <div class="text-zinc-400 text-sm line-clamp-2 mb-6">${product.desc}</div>
+                        
+                        ${product.isRobux ? `
+                        <div class="mb-6">
+                            <label class="block text-xs text-zinc-400 mb-2">ROBUX AMOUNT</label>
+                            <div class="flex border border-zinc-700 rounded-2xl overflow-hidden">
+                                <input id="robux-q-${product.id}" type="number" value="1000" min="100" step="100" 
+                                       oninput="updateRobuxPrice(this, ${product.id})"
+                                       class="flex-1 bg-transparent px-5 py-4 outline-none text-lg font-medium">
+                                <div class="bg-zinc-800 px-6 flex items-center text-xs text-yellow-400 font-medium">ROBUX</div>
+                            </div>
+                            <div id="robux-price-${product.id}" class="text-right text-yellow-400 font-bold mt-2">$3.00</div>
+                        </div>` : `
+                        <div class="flex items-center justify-between mb-6">
+                            <div class="text-3xl font-bold">$${product.price}</div>
+                            <div class="flex items-center gap-x-3">
+                                <button onclick="changeCartQty(${product.id}, -1)" class="w-8 h-8 flex items-center justify-center border border-zinc-700 hover:border-white rounded-2xl">-</button>
+                                <span id="qty-display-${product.id}" class="w-6 text-center font-medium">1</span>
+                                <button onclick="changeCartQty(${product.id}, 1)" class="w-8 h-8 flex items-center justify-center border border-zinc-700 hover:border-white rounded-2xl">+</button>
+                            </div>
+                        </div>`}
+                        
+                        <button onclick="${product.isRobux ? `addRobuxToCart(${product.id})` : `addToCart(${product.id})`}" 
+                                class="w-full py-5 bg-white hover:bg-yellow-300 transition-all text-zinc-950 font-bold rounded-3xl text-sm tracking-wider">
+                            ADD TO CART
+                        </button>
+                    </div>
+                </div>`
+                container.innerHTML += cardHTML
+            })
+        }
+        
+        function updateRobuxPrice(input, id) {
+            const qty = parseInt(input.value) || 1000
+            const price = (qty / 1000 * 3).toFixed(2)
+            document.getElementById(`robux-price-${id}`).textContent = `$${price}`
+        }
+        
+        function addRobuxToCart(id) {
+            const product = products.find(p => p.id === id)
+            const qtyInput = document.getElementById(`robux-q-${id}`)
+            let robuxQty = parseInt(qtyInput.value) || 1000
+            if (robuxQty < 100) robuxQty = 100
+            
+            const pricePerThousand = 3
+            const totalPrice = (robuxQty / 1000) * pricePerThousand
+            
+            // Add to cart
+            const existing = cart.find(item => item.id === id)
+            if (existing) {
+                existing.quantity = (existing.quantity || 1) + robuxQty
+                existing.totalPrice = totalPrice
+            } else {
+                cart.push({
+                    ...product,
+                    quantity: robuxQty,
+                    totalPrice: totalPrice
+                })
+            }
+            
+            saveCart()
+            updateCartCount()
+            showToast(`Added ${robuxQty} Robux to cart!`, 'success')
+        }
+        
+        function changeCartQty(id, change) {
+            const product = products.find(p => p.id === id)
+            if (!product) return
+            const existing = cart.find(item => item.id === id)
+            
+            if (existing) {
+                existing.quantity = (existing.quantity || 1) + change
+                if (existing.quantity < 1) existing.quantity = 1
+            } else {
+                cart.push({
+                    ...product,
+                    quantity: 1
+                })
+            }
+            
+            saveCart()
+            updateCartCount()
+            renderCart()
+        }
+        
+        function addToCart(id) {
+            const product = products.find(p => p.id === id)
+            if (!product) return
+            
+            const existing = cart.find(item => item.id === id)
+            
+            if (existing) {
+                existing.quantity = (existing.quantity || 1) + 1
+            } else {
+                cart.push({
+                    ...product,
+                    quantity: 1
+                })
+            }
+            
+            saveCart()
+            updateCartCount()
+            showToast(`${product.name} added to cart`, 'success')
+        }
+        
+        // Render featured
+        function renderFeatured() {
+            const featuredContainer = document.getElementById('featured-grid')
+            featuredContainer.innerHTML = ''
+            
+            // First 4
+            const featured = products.slice(0, 4)
+            
+            featured.forEach(product => {
+                const el = document.createElement('div')
+                el.className = "product-card bg-zinc-900 border border-zinc-800 rounded-3xl overflow-hidden"
+                el.innerHTML = `
+                    <img src="${product.img}" class="w-full h-52 object-cover">
+                    <div class="p-5">
+                        <div class="font-medium">${product.name}</div>
+                        <div class="text-yellow-400 text-xl font-bold mt-1">$${product.price}</div>
+                        <button onclick="addToCart(${product.id});event.stopImmediatePropagation()" 
+                                class="mt-6 text-xs w-full py-3 border border-yellow-400 text-yellow-400 hover:bg-yellow-400 hover:text-zinc-950 transition-colors rounded-3xl">
+                            ADD TO CART
+                        </button>
+                    </div>
+                `
+                featuredContainer.appendChild(el)
+            })
+        }
+        
+        function renderCart() {
+            const container = document.getElementById('cart-items')
+            container.innerHTML = ''
+            
+            if (cart.length === 0) {
+                container.innerHTML = `
+                    <div class="flex flex-col items-center justify-center h-64 text-center">
+                        <i class="fa-solid fa-cart-shopping text-6xl text-zinc-700 mb-6"></i>
+                        <div class="font-medium">Your cart is empty</div>
+                        <div onclick="toggleCart()" class="text-yellow-400 text-sm mt-6 cursor-pointer">Browse products →</div>
+                    </div>
+                `
+                document.getElementById('cart-total').textContent = '$0.00'
+                return
+            }
+            
+            let total = 0
+            
+            cart.forEach((item, index) => {
+                const itemTotal = item.totalPrice || (item.price * (item.quantity || 1))
+                total += itemTotal
+                
+                const itemHTML = `
+                <div class="flex gap-4">
+                    <img src="${item.img}" class="w-20 h-20 object-cover rounded-2xl">
+                    <div class="flex-1">
+                        <div class="flex justify-between">
+                            <div class="font-medium">${item.name}</div>
+                            <button onclick="removeFromCart(${index});" class="text-red-400 hover:text-red-500 text-lg">×</button>
+                        </div>
+                        ${item.isRobux ? `<div class="text-xs text-emerald-400">${item.quantity} Robux</div>` : `<div class="text-xs text-zinc-400">Qty: ${item.quantity || 1}</div>`}
+                        <div class="font-bold mt-4">$${itemTotal.toFixed(2)}</div>
+                    </div>
+                </div>`
+                container.innerHTML += itemHTML
+            })
+            
+            document.getElementById('cart-total').textContent = '$' + total.toFixed(2)
+        }
+        
+        function removeFromCart(index) {
+            cart.splice(index, 1)
+            saveCart()
+            updateCartCount()
+            renderCart()
+        }
+        
+        function toggleCart() {
+            const drawer = document.getElementById('cart-drawer')
+            drawer.classList.toggle('open')
+            if (drawer.classList.contains('open')) {
+                renderCart()
+            }
+        }
+        
+        // Filter products
+        function filterProducts() {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase().trim()
+            const sortMode = document.getElementById('sort-select').value
+            
+            let filtered = products.filter(product => {
+                return product.name.toLowerCase().includes(searchTerm) || 
+                       product.desc.toLowerCase().includes(searchTerm)
+            })
+            
+            // Sort
+            if (sortMode === 'price-low') {
+                filtered.sort((a, b) => (a.price || 0) - (b.price || 0))
+            } else if (sortMode === 'price-high') {
+                filtered.sort((a, b) => (b.price || 0) - (a.price || 0))
+            } else if (sortMode === 'name') {
+                filtered.sort((a, b) => a.name.localeCompare(b.name))
+            }
+            
+            renderProducts(filtered)
+        }
+        
+        function performSearch(term) {
+            document.getElementById('search-input').value = term
+            document.getElementById('catalog-section').scrollIntoView({ behavior: 'smooth' })
+            filterProducts()
+        }
+        
+        // Checkout
+        function proceedToCheckout() {
+            if (cart.length === 0) {
+                showToast("Cart is empty", "error")
+                return
+            }
+            toggleCart()
+            document.getElementById('checkout-modal').classList.remove('hidden')
+            renderCheckout()
+        }
+        
+        function renderCheckout() {
+            const container = document.getElementById('checkout-content')
+            let html = `<div class="space-y-8">`
+            let total = 0
+            
+            cart.forEach(item => {
+                const itemTotal = item.totalPrice || item.price * (item.quantity || 1)
+                total += itemTotal
+                html += `
+                <div class="flex gap-4 items-center">
+                    <img src="${item.img}" class="w-14 h-14 object-cover rounded-xl">
+                    <div class="flex-1">
+                        <div>${item.name}</div>
+                        ${item.isRobux ? `<div class="text-xs">${item.quantity} Robux</div>` : ''}
+                    </div>
+                    <div class="font-medium">$${itemTotal.toFixed(2)}</div>
+                </div>`
+            })
+            
+            html += `</div>`
+            html += `
+            <div class="pt-8 border-t border-zinc-700 mt-8">
+                <div class="flex justify-between items-center text-lg">
+                    <div>Total</div>
+                    <div class="font-bold text-3xl">$${total.toFixed(2)}</div>
+                </div>
+            </div>`
+            
+            container.innerHTML = html
+        }
+        
+        function closeCheckout() {
+            document.getElementById('checkout-modal').classList.add('hidden')
+        }
+        
+        function showPaymentModal() {
+            closeCheckout()
+            const total = cart.reduce((acc, item) => {
+                return acc + (item.totalPrice || item.price * (item.quantity || 1))
+            }, 0)
+            
+            document.getElementById('payment-total').textContent = '$' + total.toFixed(2)
+            document.getElementById('payment-modal').classList.remove('hidden')
+        }
+        
+        function closePaymentModal() {
+            document.getElementById('payment-modal').classList.add('hidden')
+        }
+        
+        function copyWallet() {
+            const address = "LXZaCfP5tt9yyScUB59ckTMrmrUUEg995p"
+            navigator.clipboard.writeText(address).then(() => {
+                showToast("Wallet address copied!", "success")
+            })
+        }
+        
+        function showTxidModal() {
+            closePaymentModal()
+            document.getElementById('txid-modal').classList.remove('hidden')
+        }
+        
+        function closeTxidModal() {
+            document.getElementById('txid-modal').classList.add('hidden')
+        }
+        
+        function submitTxid() {
+            const txid = document.getElementById('txid-input').value.trim()
+            if (!txid) {
+                showToast("Please enter TXID", "error")
+                return
+            }
+            
+            closeTxidModal()
+            startVerification(txid)
+        }
+        
+        function startVerification(txid) {
+            const modal = document.getElementById('verification-modal')
+            modal.classList.remove('hidden')
+            
+            const stepsContainer = document.getElementById('verification-steps')
+            stepsContainer.innerHTML = ''
+            
+            const steps = [
+                "Connecting to Litecoin Network...",
+                "Searching Transaction...",
+                "Verifying Payment Amount...",
+                "Checking Blockchain Confirmations...",
+                "Finalizing Verification..."
+            ]
+            
+            let progress = 0
+            const progressBar = document.getElementById('progress-bar')
+            
+            let stepIndex = 0
+            
+            const interval = setInterval(() => {
+                if (stepIndex < steps.length) {
+                    const stepEl = document.createElement('div')
+                    stepEl.className = "flex items-center gap-x-4"
+                    stepEl.innerHTML = `
+                        <div class="w-6 h-6 border-2 border-yellow-400 border-t-transparent rounded-full animate-spin"></div>
+                        <div>${steps[stepIndex]}</div>
+                    `
+                    stepsContainer.appendChild(stepEl)
+                    
+                    progress += 20
+                    progressBar.style.width = `${progress}%`
+                    
+                    stepIndex++
+                } else {
+                    clearInterval(interval)
+                    setTimeout(() => {
+                        finishVerification(txid)
+                    }, 1200)
+                }
+            }, 950)
+        }
+        
+        function finishVerification(txid) {
+            // Create order
+            const total = cart.reduce((acc, item) => acc + (item.totalPrice || item.price * (item.quantity || 1)), 0)
+            
+            const order = {
+                id: "SSA-" + Math.floor(100000 + Math.random() * 900000),
+                date: new Date().toISOString(),
+                items: [...cart],
+                total: total,
+                txid: txid,
+                status: "processing"
+            }
+            
+            orders.unshift(order)
+            saveOrders()
+            
+            // Clear cart
+            cart = []
+            saveCart()
+            updateCartCount()
+            
+            // Hide verification
+            document.getElementById('verification-modal').classList.add('hidden')
+            
+            // Show result
+            showOrderResult(order)
+        }
+        
+        function showOrderResult(order) {
+            const modal = document.getElementById('order-result-modal')
+            modal.classList.remove('hidden')
+            
+            document.getElementById('result-icon').innerHTML = `<i class="fa-solid fa-triangle-exclamation text-orange-400"></i>`
+            document.getElementById('result-title').innerHTML = `Order #${order.id}`
+            document.getElementById('result-message').innerHTML = `
+                <span class="text-red-400 font-medium">An unexpected system error occurred while processing your order.</span><br><br>
+                Please contact support for manual order processing.
+            `
+            
+            let detailsHTML = `
+                <div class="text-xs uppercase tracking-widest mb-4 text-zinc-400">Order summary</div>
+                <div class="space-y-4">
+            `
+            order.items.forEach(item => {
+                detailsHTML += `
+                    <div class="flex justify-between text-sm">
+                        <span>${item.name} ${item.isRobux ? `(${item.quantity} Robux)` : ''}</span>
+                        <span>$${(item.totalPrice || item.price * (item.quantity || 1)).toFixed(2)}</span>
+                    </div>
+                `
+            })
+            
+            detailsHTML += `
+                </div>
+                <div class="pt-6 mt-6 border-t border-zinc-700 flex justify-between font-bold">
+                    <span>Total Paid</span>
+                    <span>$${order.total.toFixed(2)}</span>
+                </div>
+            `
+            document.getElementById('result-details').innerHTML = detailsHTML
+        }
+        
+        function closeResultModal() {
+            document.getElementById('order-result-modal').classList.add('hidden')
+            // Optionally navigate to orders
+            navigateTo('orders')
+        }
+        
+        // Render orders
+        function renderOrders() {
+            const section = document.createElement('div')
+            section.id = 'orders-section'
+            section.className = 'py-20 bg-zinc-950 hidden'
+            section.innerHTML = `
+                <div class="max-w-screen-2xl mx-auto px-8">
+                    <h2 class="text-4xl font-semibold mb-12">Order History</h2>
+                    <div id="orders-list" class="space-y-8"></div>
+                </div>
+            `
+            // Insert before FAQ
+            const faq = document.getElementById('faq-section')
+            faq.parentNode.insertBefore(section, faq)
+            
+            updateOrdersList()
+        }
+        
+        function updateOrdersList() {
+            const container = document.getElementById('orders-list')
+            if (!container) return
+            
+            if (orders.length === 0) {
+                container.innerHTML = `
+                    <div class="bg-zinc-900 rounded-3xl p-12 text-center">
+                        <i class="fa-solid fa-receipt text-6xl text-zinc-600 mb-6"></i>
+                        <div class="text-xl">No orders yet</div>
+                    </div>
+                `
+                return
+            }
+            
+            let html = ''
+            
+            orders.forEach(order => {
+                html += `
+                <div class="bg-zinc-900 border border-zinc-700 rounded-3xl p-8">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <div class="font-mono text-xs text-zinc-400">ORDER ID</div>
+                            <div class="font-bold text-lg">${order.id}</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-xs text-zinc-400">${new Date(order.date).toLocaleDateString()}</div>
+                            <div class="text-emerald-400 font-medium">$${order.total.toFixed(2)}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-8 text-sm space-y-2">
+                        ${order.items.map(item => `
+                            <div class="flex justify-between">
+                                <span>${item.name}</span>
+                                <span class="text-zinc-400">$${ (item.totalPrice || item.price * (item.quantity || 1)).toFixed(2) }</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    <div class="mt-8 pt-6 border-t border-zinc-700 text-xs flex items-center justify-between">
+                        <div class="flex items-center gap-x-2">
+                            <span class="inline-block w-3 h-3 bg-emerald-400 rounded-full"></span>
+                            <span>Payment received</span>
+                        </div>
+                        <button onclick="contactSupport()" class="text-yellow-400 text-xs flex items-center gap-x-2">
+                            <i class="fa-solid fa-headset"></i>
+                            <span>CONTACT SUPPORT</span>
+                        </button>
+                    </div>
+                </div>`
+            })
+            
+            container.innerHTML = html
+        }
+        
+        function contactSupport() {
+            window.open('https://discord.gg/VC77BhU8rC', '_blank')
+        }
+        
+        // FAQ
+        function renderFAQ() {
+            const faqs = [
+                {
+                    q: "How fast are orders delivered?",
+                    a: "Most products are delivered instantly after payment verification. Robux and members usually arrive within 5-30 minutes."
+                },
+                {
+                    q: "What payment methods are accepted?",
+                    a: "Currently we only accept Litecoin (LTC). We are working on adding more crypto options."
+                },
+                {
+                    q: "What happens if there is an issue?",
+                    a: "Please submit a ticket on our Discord support server. Our team will handle it manually within a few hours."
+                },
+                {
+                    q: "Is this service safe?",
+                    a: "Yes. All transactions are processed on the blockchain. We have processed thousands of orders with no major issues."
+                }
+            ]
+            
+            const container = document.getElementById('faq-container')
+            let html = ''
+            
+            faqs.forEach((faq, i) => {
+                html += `
+                <div onclick="this.querySelector('.answer').classList.toggle('hidden')" class="bg-zinc-900 border border-zinc-800 rounded-3xl px-8 py-6 cursor-pointer">
+                    <div class="flex justify-between items-center">
+                        <div class="font-medium">${faq.q}</div>
+                        <i class="fa-solid fa-chevron-down transition-transform"></i>
+                    </div>
+                    <div class="answer hidden text-zinc-400 text-sm mt-6">${faq.a}</div>
+                </div>`
+            })
+            
+            container.innerHTML = html
+        }
+        
+        // Animate counters
+        function animateCounters() {
+            function animateValue(id, start, end, duration) {
+                const obj = document.getElementById(id)
+                if (!obj) return
+                const range = end - start
+                let startTimestamp = null
+                const step = (timestamp) => {
+                    if (!startTimestamp) startTimestamp = timestamp
+                    const progress = Math.min((timestamp - startTimestamp) / duration, 1)
+                    obj.textContent = Math.floor(progress * range + start).toLocaleString('en-US')
+                    if (progress < 1) {
+                        window.requestAnimationFrame(step)
+                    } else {
+                        obj.textContent = end.toLocaleString('en-US')
+                    }
+                }
+                window.requestAnimationFrame(step)
+            }
+            
+            // Trigger after a small delay
+            setTimeout(() => {
+                animateValue("stat-orders", 8000, 12459, 1800)
+                animateValue("stat-customers", 6000, 8732, 2000)
+                animateValue("stat-products", 30000, 45210, 2200)
+                animateValue("stat-years", 2, 3, 1200)
+            }, 1200)
+        }
+        
+        // Navigation
+        function navigateTo(section) {
+            // Hide all sections
+            document.querySelectorAll('section').forEach(s => {
+                if (s.id !== 'faq-section') s.classList.add('hidden')
+            })
+            
+            const ordersSection = document.getElementById('orders-section')
+            
+            if (section === 'orders') {
+                if (!ordersSection) renderOrders()
+                else ordersSection.classList.remove('hidden')
+                document.getElementById('orders-section').scrollIntoView({ behavior: 'smooth' })
+            } else if (section === 'faq') {
+                document.getElementById('faq-section').scrollIntoView({ behavior: 'smooth' })
+            } else {
+                // home
+                document.getElementById('home-section').scrollIntoView({ behavior: 'smooth' })
+            }
+        }
+        
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu')
+            menu.classList.toggle('hidden')
+        }
+        
+        // Main initialization
+        function initialize() {
+            // Tailwind ready
+            loadData()
+            renderFeatured()
+            renderProducts(products)
+            renderFAQ()
+            animateCounters()
+            renderOrders()
+            
+            // Hide loading
+            setTimeout(() => {
+                const loading = document.getElementById('loading-screen')
+                loading.style.transition = 'opacity 0.6s ease'
+                loading.style.opacity = '0'
+                setTimeout(() => {
+                    loading.style.display = 'none'
+                }, 600)
+            }, 1200)
+            
+            // Keyboard escape support
+            document.addEventListener('keydown', function(e) {
+                if (e.key === "Escape") {
+                    const modals = ['checkout-modal', 'payment-modal', 'txid-modal', 'verification-modal', 'order-result-modal']
+                    for (let id of modals) {
+                        const modal = document.getElementById(id)
+                        if (modal && !modal.classList.contains('hidden')) {
+                            modal.classList.add('hidden')
+                            return
+                        }
+                    }
+                    const cartDrawer = document.getElementById('cart-drawer')
+                    if (cartDrawer.classList.contains('open')) toggleCart()
+                }
+            })
+            
+            // Demo: add one item
+            setTimeout(() => {
+                if (cart.length === 0) {
+                    cart.push({
+                        ...products[1],
+                        quantity: 1
+                    })
+                    saveCart()
+                    updateCartCount()
+                }
+            }, 2100)
+            
+            console.log('%cShop Sell Auth ready! Fully functional single-file demo.', 'color:#fcd34d; font-family:monospace')
+        }
+        
+        // Boot app
+        window.onload = initialize
+    </script>
+</body>
+</html>
